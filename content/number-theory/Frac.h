@@ -15,16 +15,16 @@ struct Frac {
 	Frac(T xi, T yi) : x(xi), y(yi) { T g = gcd(x, y); x/=g; y/=g; if (y < 0) x*=-1, y*=-1; }
 	explicit Frac(T x) : x(x), y(1) { }
 	F operator+(const F o) const { return F(x*o.y+o.x*y, y*o.y ); };
-	F operator-() const { F(-x, y); };
-	F operator-(const F o) const { return this+-o; };
+	F operator-() const { return F(-x, y); };
+	F operator-(const F o) const { return *this+-o; };
 	F operator*(const F o) const { return F(x*o.x, y*o.y ); };
 	F operator/(const F o) const { return F(x*o.y, y*o.x ); };
-	F operator<(const F o) const { return this-o<0; }
-	F operator>(const F o) const { return this-o>0; }
-	F operator<=(const F o) const { return this-o<=0; }
-	F operator>=(const F o) const { return this-o>=0; }
-	F operator==(const F o) const { return this-o==0; }
-	F operator!=(const F o) const { return this-o!=0; }
+	bool operator<(const F o) const { return (*this-o).x<0; }
+	bool operator>(const F o) const { return (*this-o).x>0; }
+	bool operator<=(const F o) const { return (*this-o).x<=0; }
+	bool operator>=(const F o) const { return (*this-o).x>=0; }
+	bool operator==(const F o) const { return (*this-o).x==0; }
+	bool operator!=(const F o) const { return (*this-o).x!=0; }
 	friend ostream& operator<<(ostream& os, F f) {
 		return os << f.x << '/' << f.y; }
 };
