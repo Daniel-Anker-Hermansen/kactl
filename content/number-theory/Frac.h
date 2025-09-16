@@ -12,9 +12,8 @@ template<class T>
 struct Frac {
 	typedef Frac F;
 	T x, y;
-	Frac(T x, T y) : x(x), y(y) { this->s(); }
+	Frac(T xi, T yi) : x(xi), y(yi) { T g = gcd(x, y); x/=g; y/=g; if (y < 0) x*=-1, y*=-1; }
 	explicit Frac(T x) : x(x), y(1) { }
-	void s() { T g = gcd(x, y); x/=g; y/=g; if (y < 0) x*=-1, y*=-1; }
 	F operator+(const F o) const { return F(x*o.y+o.x*y, y*o.y ); };
 	F operator-() const { F(-x, y); };
 	F operator-(const F o) const { return this+-o; };
