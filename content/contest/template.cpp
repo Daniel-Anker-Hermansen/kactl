@@ -7,7 +7,10 @@ using namespace std;
 #define sz(x) (int)(x).size()
 typedef long long ll;
 typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
 typedef vector<int> vi;
+typedef vector<ll> vl;
+typedef vector<vector<ll>> vvl;
 
 signed main() {
 	cin.tie(0)->sync_with_stdio(0);
