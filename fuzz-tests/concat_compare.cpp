@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 #define rep(i, a, b) for(int i = a; i < (b); ++i)
@@ -14,4 +15,22 @@ typedef vector<vector<ll>> vvl;
 signed main() {
 	cin.tie(0)->sync_with_stdio(0);
 	cin.exceptions(cin.failbit);
+	ll n, q;
+	cin >> n >> q;
+	vector<string> maxv(n, " ");
+	rep(i, 0, q) {
+		char c;
+		cin >> c;
+		if (c == '+') {
+			ll l, r;
+			string v;
+			cin >> l >> r >> v;
+			rep(i, l, r) maxv[i] = maxv[i] + v;
+		}
+		else {
+			ll i;
+			cin >> i;
+			printf("%s\n", maxv[i].c_str());
+		}
+	}
 }
