@@ -1,56 +1,35 @@
 /**
- * Author: Daniel Anker Hermansen
- * Date: 2025-10-03
+ * Author: Lucian Bicsi, Oskar Haarklou Veileborg
+ * Date: 2020-11-17
  * License: CC0
  * Source: folklore
- * Description: Zero-indexed max-tree. Bounds are inclusive to the left and exclusive to the right. Supports range updates and point queries.
- * Can be changed by modifying U, f and unit. Updates must be associative.
+ * Description: Zero-indexed max-tree with range updates and point queries.
+ * Bounds are inclusive to the left and exclusive to the right. Can be changed by modifying T, f and unit.
+ * More limited than LazySegmentTree but much better constant factors.
+ * Update performs: $a[i] = f(a[i], val), i \in [b,e)$ where $a$ is the underlying array.
  * Time: O(\log N)
- * Status: stress-tested (fuzzed)
+ * Status: stress-tested
+ * Details: See stress tests for applications.
  */
 #pragma once
 
 struct Tree {
-	typedef ll U;
-	vector<U> a;
-	U unit = LONG_LONG_MIN;
-	U f(U x, U y) { return max(x, y); }
-	Tree(ll n) {
-		ll i = 1;
-		while (i < n) i *= 2;
-		a.assign(2 * i, unit);
+	typedef int T;
+	static constexpr T unit = INT_MIN;
+	// (any associative, commutative fn)
+	T f(T a, T b) { return max(a, b); }
+	vector<T> s; int n;
+	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
+	T query(int pos) {
+	  T res = s[pos += n];
+	  while(pos /= 2) res = f(res, s[pos]);
+	  return res;
 	}
- 
-	U query(ll i) {
-		ll j = 1;
-		ll l = 0;
-		ll r = sz(a) / 2;
-		U d = unit;
-		while(j < sz(a)) {
-			d = f(a[j], d);
-			ll m = (r + l) / 2;
-			if (i < m) j = 2 * j, r = m;
-			else j = 2 * j + 1, l = m;
+	void update(int b, int e, T val) { // update [b, e)
+		for (b += n, e += n; b < e; b /= 2, e /= 2) {
+			if (b % 2) s[b] = f(val, s[b]), b++;
+			if (e % 2) --e, s[e] = f(val, s[e]);
 		}
-		return d;
-	}
-	
-	void update_inner(ll l, ll r, ll j, ll li, ll ri, U val) {
-		if (r <= li || l >= ri) return;
-		if (l <= li && r >= ri) {
-			a[j] = f(a[j], val);
-			return;
-		}
-		a[2 * j] = f(a[2 * j], a[j]);
-		a[2 * j + 1] = f(a[2 * j + 1], a[j]);
-		a[j] = unit;
-		ll m = (li + ri) / 2;
-		update_inner(l, r, 2 * j, li, m, val);
-		update_inner(l, r, 2 * j + 1, m, ri, val);
-	}
- 
-	void update(ll l, ll r, U val) {
-		if (r <= l) return;
-		update_inner(l, r, 1, 0, sz(a) / 2, val);
 	}
 };
+
