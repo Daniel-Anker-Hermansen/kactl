@@ -2,8 +2,8 @@
  * Author: Frederik Vase Haraldsson
  * Date: 2025-10-06
  * Source: Kosaraju's algorithm 
- * Usage: comp[u] == comp[v] iff verticies u and v are in the same connected component.
- *  comp is numbered from 1 to #components inclusive
+ * Description: comp[u] == comp[v] iff verticies u and v are in the same connected component.
+ *  comp is numbered from 1 to \#components inclusive
  * Time: O(E + V)
  * Status: Tested on https://cses.fi/problemset/task/1683
  */
