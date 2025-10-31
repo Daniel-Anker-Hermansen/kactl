@@ -16,7 +16,7 @@
 
 #include "Point.h"
 
-typedef Point<ll> P;
+typedef complex<ll> P;
 typedef struct Quad* Q;
 typedef __int128_t lll; // (can be ll if coords are < 2e4)
 P arb(LLONG_MAX,LLONG_MAX); // not equal to any other point
@@ -30,9 +30,9 @@ struct Quad {
 } *H;
 
 bool circ(P p, P a, P b, P c) { // is p in the circumcircle?
-	lll p2 = p.dist2(), A = a.dist2()-p2,
-	    B = b.dist2()-p2, C = c.dist2()-p2;
-	return p.cross(a,b)*C + p.cross(b,c)*A + p.cross(c,a)*B > 0;
+	lll p2 = norm(p), A = norm(a)-p2,
+	    B = norm(b)-p2, cc = norm(c)-p2;
+	return cross(p,a,b)*cc + cross(p,b,c)*A + cross(p,c,a)*B > 0;
 }
 Q makeEdge(P orig, P dest) {
 	Q r = H ? H : new Quad{new Quad{new Quad{new Quad{0}}}};
@@ -56,19 +56,19 @@ pair<Q,Q> rec(const vector<P>& s) {
 		Q a = makeEdge(s[0], s[1]), b = makeEdge(s[1], s.back());
 		if (sz(s) == 2) return { a, a->r() };
 		splice(a->r(), b);
-		auto side = s[0].cross(s[1], s[2]);
+		auto side = cross(s[0], s[1], s[2]);
 		Q c = side ? connect(b, a) : 0;
 		return {side < 0 ? c->r() : a, side < 0 ? c : b->r() };
 	}
 
 #define H(e) e->F(), e->p
-#define valid(e) (e->F().cross(H(base)) > 0)
+#define valid(e) (cross(e->F(), H(base)) > 0)
 	Q A, B, ra, rb;
 	int half = sz(s) / 2;
 	tie(ra, A) = rec({all(s) - half});
 	tie(B, rb) = rec({sz(s) - half + all(s)});
-	while ((B->p.cross(H(A)) < 0 && (A = A->next())) ||
-	       (A->p.cross(H(B)) > 0 && (B = B->r()->o)));
+	while ((cross(B->p, H(A)) < 0 && (A = A->next())) ||
+	       (cross(A->p, H(B)) > 0 && (B = B->r()->o)));
 	Q base = connect(B->r(), A);
 	if (A->p == ra->p) ra = base->r();
 	if (B->p == rb->p) rb = base;
@@ -97,7 +97,7 @@ vector<P> triangulate(vector<P> pts) {
 	Q e = rec(pts).first;
 	vector<Q> q = {e};
 	int qi = 0;
-	while (e->o->F().cross(e->F(), e->p) < 0) e = e->o;
+	while (cross(e->o->F(), e->F(), e->p) < 0) e = e->o;
 #define ADD { Q c = e; do { c->mark = 1; pts.push_back(c->p); \
 	q.push_back(c->r()); c = c->next(); } while (c != e); }
 	ADD; pts.clear();

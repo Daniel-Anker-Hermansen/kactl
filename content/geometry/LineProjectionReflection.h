@@ -14,8 +14,8 @@
 
 #include "Point.h"
 
-template<class P>
+typedef complex<ll> P;
 P lineProj(P a, P b, P p, bool refl=false) {
 	P v = b - a;
-	return p - v.perp()*(1+refl)*v.cross(p-a)/v.dist2();
+	return p - perp(v)*(1+refl)*cross(v, p-a)/norm(v);
 }

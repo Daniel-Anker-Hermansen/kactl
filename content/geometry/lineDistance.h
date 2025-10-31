@@ -22,5 +22,5 @@ Using Point3D will always give a non-negative distance. For Point3D, call .dist 
 
 template<class P>
 double lineDist(const P& a, const P& b, const P& p) {
-	return (double)(b-a).cross(p-a)/(b-a).dist();
+	return (double)cross(b-a, p-a)/abs(b-a);
 }

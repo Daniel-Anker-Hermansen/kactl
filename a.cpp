@@ -1,14 +1,15 @@
-/**
- * Author: Ulf Lundstrom
- * Date: 2009-02-26
- * License: CC0
- * Author: Daniel Anker Hermansen
- * Source: Complex number theory
- * Description: Class to handle points in the plane.
- * 	T can be e.g. double or long long. (Avoid int.)
- * Status: None
- */
-#pragma once
+#include <bits/stdc++.h>
+using namespace std;
+
+#define rep(i, a, b) for(int i = a; i < (b); ++i)
+#define all(x) begin(x), end(x)
+#define sz(x) (int)(x).size()
+typedef long long ll;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+typedef vector<vector<ll>> vvl;
 
 #define TT template <class T>
 #define X real()
@@ -24,3 +25,10 @@ TT C unit(C p) { return p/abs(p); }
 TT C perp(C p) { return p*C(0, 1); }
 TT C normal(C p) { return unit(perp(p)); }
 TT C rotate(C p, T a) { return polar(1,a)*p; } // only for double/long double
+
+signed main() {
+	cin.tie(0)->sync_with_stdio(0);
+	cin.exceptions(cin.failbit);
+	complex<ll> p, q;
+	cross(p, q);
+}

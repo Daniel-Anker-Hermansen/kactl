@@ -14,8 +14,8 @@
 #include "Point.h"
 #include "sideOf.h"
 
-typedef Point<double> P;
-double rat(P a, P b) { return sgn(b.x) ? a.x/b.x : a.y/b.y; }
+typedef complex<double> P;
+double rat(P a, P b) { return sgn(b.X) ? a.X/b.X : a.Y/b.Y; }
 double polyUnion(vector<vector<P>>& poly) {
 	double ret = 0;
 	rep(i,0,sz(poly)) rep(v,0,sz(poly[i])) {
@@ -23,14 +23,14 @@ double polyUnion(vector<vector<P>>& poly) {
 		vector<pair<double, int>> segs = {{0, 0}, {1, 0}};
 		rep(j,0,sz(poly)) if (i != j) {
 			rep(u,0,sz(poly[j])) {
-				P C = poly[j][u], D = poly[j][(u + 1) % sz(poly[j])];
-				int sc = sideOf(A, B, C), sd = sideOf(A, B, D);
+				P cc = poly[j][u], D = poly[j][(u + 1) % sz(poly[j])];
+				int sc = sideOf(A, B, cc), sd = sideOf(A, B, D);
 				if (sc != sd) {
-					double sa = C.cross(D, A), sb = C.cross(D, B);
+					double sa = cross(cc, D, A), sb = cross(cc, D, B);
 					if (min(sc, sd) < 0)
 						segs.emplace_back(sa / (sa - sb), sgn(sc - sd));
-				} else if (!sc && !sd && j<i && sgn((B-A).dot(D-C))>0){
-					segs.emplace_back(rat(C - A, B - A), 1);
+				} else if (!sc && !sd && j<i && sgn(dot(B-A, D-cc))>0){
+					segs.emplace_back(rat(cc - A, B - A), 1);
 					segs.emplace_back(rat(D - A, B - A), -1);
 				}
 			}
@@ -43,7 +43,7 @@ double polyUnion(vector<vector<P>>& poly) {
 			if (!cnt) sum += segs[j].first - segs[j - 1].first;
 			cnt += segs[j].second;
 		}
-		ret += A.cross(B) * sum;
+		ret += cross(A, B) * sum;
 	}
 	return ret / 2;
 }

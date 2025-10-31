@@ -10,11 +10,11 @@
 #include "Point.h"
 
 typedef long long T;
-typedef Point<T> P;
+typedef complex<T> P;
 const T INF = numeric_limits<T>::max();
 
-bool on_x(const P& a, const P& b) { return a.x < b.x; }
-bool on_y(const P& a, const P& b) { return a.y < b.y; }
+bool on_x(const P& a, const P& b) { return a.X < b.X; }
+bool on_y(const P& a, const P& b) { return a.Y < b.Y; }
 
 struct Node {
 	P pt; // if this is a leaf, the single point in it
@@ -22,15 +22,15 @@ struct Node {
 	Node *first = 0, *second = 0;
 
 	T distance(const P& p) { // min squared distance to a point
-		T x = (p.x < x0 ? x0 : p.x > x1 ? x1 : p.x);
-		T y = (p.y < y0 ? y0 : p.y > y1 ? y1 : p.y);
-		return (P(x,y) - p).dist2();
+		T x = (p.X < x0 ? x0 : p.X > x1 ? x1 : p.X);
+		T y = (p.Y < y0 ? y0 : p.Y > y1 ? y1 : p.Y);
+		return norm(P(x,y) - p);
 	}
 
 	Node(vector<P>&& vp) : pt(vp[0]) {
 		for (P p : vp) {
-			x0 = min(x0, p.x); x1 = max(x1, p.x);
-			y0 = min(y0, p.y); y1 = max(y1, p.y);
+			x0 = min(x0, p.X); x1 = max(x1, p.X);
+			y0 = min(y0, p.Y); y1 = max(y1, p.Y);
 		}
 		if (vp.size() > 1) {
 			// split on x if width >= height (not ideal...)
@@ -52,7 +52,7 @@ struct KDTree {
 		if (!node->first) {
 			// uncomment if we should not find the point itself:
 			// if (p == node->pt) return {INF, P()};
-			return make_pair((p - node->pt).dist2(), node->pt);
+			return make_pair(norm(p - node->pt), node->pt);
 		}
 
 		Node *f = node->first, *s = node->second;
@@ -61,8 +61,11 @@ struct KDTree {
 
 		// search closest side first, other side if needed
 		auto best = search(f, p);
-		if (bsec < best.first)
-			best = min(best, search(s, p));
+		if (bsec < best.first) {
+			auto r = search(s, p);
+			if (r.first < best.first) best = r;
+			
+		}
 		return best;
 	}
 

@@ -12,19 +12,19 @@
 
 #include "../../content/geometry/Point.h"
 
-typedef Point<double> P;
-#define arg(p, q) atan2(p.cross(q), p.dot(q))
+typedef complex<double> P;
+#define parg(p, q) atan2(cross(p, q), dot(p, q))
 double circlePoly(P c, double r, vector<P> ps) {
 	auto tri = [&](P p, P q) {
 		auto r2 = r * r / 2;
 		P d = q - p;
-		auto a = d.dot(p)/d.dist2(), b = (p.dist2()-r*r)/d.dist2();
+		auto a = dot(d, p)/norm(2), b = (norm(p)-r*r)/norm(d);
 		auto det = a * a - b;
-		if (det <= 0) return arg(p, q) * r2;
+		if (det <= 0) return parg(p, q) * r2;
 		auto s = max(0., -a-sqrt(det)), t = min(1., -a+sqrt(det));
-		if (t < 0 || 1 <= s) return arg(p, q) * r2;
+		if (t < 0 || 1 <= s) return parg(p, q) * r2;
 		P u = p + d * s, v = q + d * (t-1);
-		return arg(p,u) * r2 + u.cross(v)/2 + arg(v,q) * r2;
+		return parg(p,u) * r2 + cross(u, v)/2 + parg(v,q) * r2;
 	};
 	auto sum = 0.0;
 	rep(i,0,sz(ps))

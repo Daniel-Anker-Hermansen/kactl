@@ -16,7 +16,7 @@
 #include "sideOf.h"
 #include "OnSegment.h"
 
-typedef Point<ll> P;
+typedef complex<ll> P;
 
 bool inHull(const vector<P>& l, P p, bool strict = true) {
 	int a = 1, b = sz(l) - 1, r = !strict;
@@ -28,5 +28,5 @@ bool inHull(const vector<P>& l, P p, bool strict = true) {
 		int c = (a + b) / 2;
 		(sideOf(l[0], l[c], p) > 0 ? b : a) = c;
 	}
-	return sgn(l[a].cross(l[b], p)) < r;
+	return sgn(cross(l[a], l[b], p)) < r;
 }
