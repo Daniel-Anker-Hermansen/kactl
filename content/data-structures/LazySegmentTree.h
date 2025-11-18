@@ -1,66 +1,75 @@
 /**
- * Author: Simon Lindholm
- * Date: 2016-10-08
+ * Author: Daniel Anker Hermansen
+ * Date: 2025-11-18
  * License: CC0
- * Source: me
- * Description: Segment tree with ability to add or set values of large intervals, and compute max of intervals.
- * Can be changed to other things.
- * Use with a bump allocator for better performance, and SmallPtr or implicit indices to save memory.
+ * Source: folklore
+ * Description: Segment treee for range updates and range queries with associative updates and associative value merges.
  * Time: O(\log N).
- * Usage: Node* tr = new Node(v, 0, sz(v));
- * Status: stress-tested a bit
+ * Status: CSES Range Updates and Sums
  */
 #pragma once
 
-#include "../various/BumpAllocator.h"
+struct LazySegmentTree {
+	typedef ll T;
+	typedef Update U;
+	T tunit = 0;
+	U uunit = Update{-1, 0};
+	T f(T l, T r) { return l + r; }
+	T u(T l, U u, ll s) { return u.u(l, s); }
+	U g(U l, U r) { return l.g(r); } // g(l, r)(x) == r(l(x))
 
-const int inf = 1e9;
-struct Node {
-	Node *l = 0, *r = 0;
-	int lo, hi, mset = inf, madd = 0, val = -inf;
-	Node(int lo,int hi):lo(lo),hi(hi){} // Large interval of -inf
-	Node(vi& v, int lo, int hi) : lo(lo), hi(hi) {
-		if (lo + 1 < hi) {
-			int mid = lo + (hi - lo)/2;
-			l = new Node(v, lo, mid); r = new Node(v, mid, hi);
-			val = max(l->val, r->val);
-		}
-		else val = v[lo];
+	ll n;
+	vector<T> vals;
+	vector<U> upds;
+	vl s;
+	
+	LazySegmentTree(vector<T> &ts) : LazySegmentTree(sz(ts)) {
+		rep(i, 0, sz(ts)) vals[n + i] = ts[i];
+		for (ll i = n; --i;) vals[i] = f(vals[2 * i], vals[2 * i + 1]);
 	}
-	int query(int L, int R) {
-		if (R <= lo || hi <= L) return -inf;
-		if (L <= lo && hi <= R) return val;
-		push();
-		return max(l->query(L, R), r->query(L, R));
+
+	LazySegmentTree(ll ss) : n(1ll << (64 - __builtin_clzll(ss))), vals(2 * n, tunit), upds(2 * n, uunit), s(2 * n, 1) {
+		for (ll i = n; --i;) s[i] = s[2 * i] + s[2 * i + 1];
 	}
-	void set(int L, int R, int x) {
-		if (R <= lo || hi <= L) return;
-		if (L <= lo && hi <= R) mset = val = x, madd = 0;
-		else {
-			push(), l->set(L, R, x), r->set(L, R, x);
-			val = max(l->val, r->val);
-		}
+
+	void push(ll i) {
+		ll j = 2 * i;
+		ll k = j + 1;
+		if (j < sz(upds)) upds[j] = g(upds[j], upds[i]), upds[k] = g(upds[k], upds[i]), recalc(j), recalc(k); 
+		else vals[i] = u(vals[i], upds[i], 1);
+		upds[i] = uunit;
 	}
-	void add(int L, int R, int x) {
-		if (R <= lo || hi <= L) return;
-		if (L <= lo && hi <= R) {
-			if (mset != inf) mset += x;
-			else madd += x;
-			val += x;
-		}
-		else {
-			push(), l->add(L, R, x), r->add(L, R, x);
-			val = max(l->val, r->val);
-		}
+
+	void recalc(ll i) {
+		ll j = 2 * i;
+		ll k = j + 1;
+		if (j < sz(upds)) vals[i] = u(f(vals[j], vals[k]), upds[i], s[i]);
+		else vals[i] = u(vals[i], upds[i], 1), upds[i] = uunit;
 	}
-	void push() {
-		if (!l) {
-			int mid = lo + (hi - lo)/2;
-			l = new Node(lo, mid); r = new Node(mid, hi);
+
+	T query(ll l, ll r, ll i = 1) { // [l, r) r <= l -> tunit
+		if (r <= 0 || l >= s[i]) return tunit;
+		if (l <= 0 && r >= s[i]) return vals[i];
+		push(i);
+		ll j = 2 * i;
+		ll k = j + 1;
+		ll mid = s[j];
+		return u(f(query(l, r, j), query(l - mid, r - mid, k)), upds[i], s[i]);
+	}
+
+	void update(ll l, ll r, U u, ll i = 1) { // [l, r)
+		if (r <= 0 || l >= s[i]) return;
+		if (l <= 0 && r >= s[i]) {
+			upds[i] = g(upds[i], u);
+			recalc(i);
+			return;
 		}
-		if (mset != inf)
-			l->set(lo,hi,mset), r->set(lo,hi,mset), mset = inf;
-		else if (madd)
-			l->add(lo,hi,madd), r->add(lo,hi,madd), madd = 0;
+		push(i);
+		ll j = 2 * i;
+		ll k = j + 1;
+		ll mid = s[j];
+		update(l, r, u, j);
+		update(l - mid, r - mid, u, k);
+		recalc(i);
 	}
 };
