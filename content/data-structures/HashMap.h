@@ -1,28 +1,27 @@
 /**
- * Author: Simon Lindholm, chilli
- * Date: 2018-07-23
+ * Author: USACO-guide, Frederik
+ * Date: 2025-18-11
  * License: CC0
- * Source: http://codeforces.com/blog/entry/60737
- * Description: Hash map with mostly the same API as unordered\_map, but \tilde
- * 3x faster. Uses 1.5x memory.
- * Initial capacity must be a power of 2 (if provided).
+ * Description: Faster hash map/set with mostly the same API as unordered\_map
+ * Usage: To check if map/set contains element use: C.find(x) != C.end()
+ * Status: Testet on various cses tasks
  */
+
 #pragma once
 
-#include <bits/extc++.h> /** keep-include */
-// To use most bits rather than just the lowest ones:
-struct chash { // large odd number for C
-	const uint64_t C = ll(4e18 * acos(0)) | 71;
-	ll operator()(ll x) const { return __builtin_bswap64(x*C); }
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+typedef uint64_t ul;
+struct chash {
+    ul operator()(ul x) const {
+        static const ul C = ul(2e18 * acos(0)) + 71;
+        static const unsigned rnd = chrono::steady_clock::now().time_since_epoch().count();
+        return __builtin_bswap64((x^rnd)*C);
+    }
 };
-__gnu_pbds::gp_hash_table<ll,int,chash> h({},{},{},{},{1<<16});
+// unordered_map
+template<class K,class V> using hash_map = gp_hash_table<K,V,chash>;
+//unordered_set
+template<class K> using hash_set = gp_hash_table<K,null_type,chash>;
 
-/** For CodeForces, or other places where hacking might be a problem:
-
-const int RANDOM = chrono::high_resolution_clock::now().time_since_epoch().count();
-struct chash { // To use most bits rather than just the lowest ones:
-	const uint64_t C = ll(4e18 * acos(0)) | 71; // large odd number
-	ll operator()(ll x) const { return __builtin_bswap64((x^RANDOM)*C); }
-};
-__gnu_pbds::gp_hash_table<ll, int, chash> h({},{},{},{}, {1 << 16});
-*/
