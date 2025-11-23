@@ -5,6 +5,7 @@
  * Description: Integer division. Works with negative numbers.
  * Status: Stress-tested
  */
+#pragma once
 
 template <class T>
 T floor_div(T x, T y) { return x/y - ((x<0)!=(y<0) && x%y); }
