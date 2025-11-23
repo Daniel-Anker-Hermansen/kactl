@@ -8,7 +8,7 @@
 #pragma once
 
 template <class T>
-T floor_div(T x, T y) { return x/y - ((x<0)!=(y<0) && x%y); }
+T floorDiv(T x, T y) { return x/y - ((x<0)!=(y<0) && x%y); }
 
 template <class T>
-T ceil_div(T x, T y) { return -floor_div(-x, y); }
+T ceilDiv(T x, T y) { return -floor_div(-x, y); }
