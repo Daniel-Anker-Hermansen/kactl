@@ -10,6 +10,7 @@ typedef pair<ll, ll> pll;
 typedef vector<int> vi;
 typedef vector<ll> vl;
 typedef vector<vector<ll>> vvl;
+const ll inf = LONG_LONG_MAX / 2;
 
 signed main() {
 	cin.tie(0)->sync_with_stdio(0);
