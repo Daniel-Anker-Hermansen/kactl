@@ -43,13 +43,11 @@ pair<Node<T, U>*, Node<T, U>*> split(Node<T, U>* n, int k) {
 	if (!n) return {};
 	n->push();
 	if (cnt(n->l) >= k) { // "n->val >= k" for lower_bound(k)
-		if (n->l) n->l->push();
 		auto [L,R] = split(n->l, k);
 		n->l = R;
 		n->recalc();
 		return {L, n};
 	} else {
-		if (n->r) n->r->push();
 		auto [L,R] = split(n->r,k - cnt(n->l) - 1); // and just "k"
 		n->r = L;
 		n->recalc();
