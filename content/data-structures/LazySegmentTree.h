@@ -3,7 +3,7 @@
  * Date: 2025-11-25
  * Source: Folklore
  * Description: Data structure to support range updates and queries. T is the storage type and U is the update type.
- * Status: Tested on CSES "Range Update Queries"
+ * Status: Tested on CSES "Range Update Queries" and "Range Updates and Sums"
  */
 #pragma once
 
@@ -17,7 +17,7 @@ struct LazySegmentTree {
 	}
 	void push(ll i) {
 		if (i<n) us[2*i]=us[i]*us[2*i], us[2*i+1]=us[i]*us[2*i+1];
-		ts[i] = us[i].apply(ts[i], 1); us[i] = U();
+		ts[i] = us[i].apply(ts[i], s); us[i] = U();
 	}
 	T query(ll l, ll r, ll i=1) { // [l, r), r <= l -> T()
 		push(i); if (r <= 0 || l >= s) return T();

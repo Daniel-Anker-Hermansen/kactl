@@ -27,11 +27,11 @@ struct Add {
 struct SetAdd {
 	ll set, add;
  
-	U() : set(-1), add(0) {}
-	U(ll set, ll add) : set(set), add(add) {}
-	U operator*(U t) const { // 2. * 1.
-		if (set != -1) return U(set, add);
-		return U(t.set, add + t.add);
+	SetAdd() : set(-1), add(0) {}
+	SetAdd(ll set, ll add) : set(set), add(add) {}
+	SetAdd operator*(SetAdd t) const { // 2. * 1.
+		if (set != -1) return SetAdd(set, add);
+		return SetAdd(t.set, add + t.add);
 	}
 	ll apply(ll v, ll s) {
 		if (set != -1) return s * (set + add);

@@ -3,7 +3,7 @@
  * Date: 2025-11-25
  * Source: Folklore
  * Description: Sparse data structure to support range updates and queries. T is the storage type and U is the update type.
- * Status: Tested on CSES "Range Update Queries"
+ * Status: Tested on CSES "Range Update Queries" and "Range Updates and Sums"
  */
 #pragma once
 
@@ -19,7 +19,7 @@ struct SparseLazySegmentTree {
 	void push(Node *&i) {
 		fix(i); // remove rest if not using lazy propagation
 		if (s>1) fix(i->l), fix(i->r), i->l->u = i->u * i->l->u, i->r->u = i->u * i->r->u;
-		i->t = i->u.apply(i->t, 1); i->u = U();
+		i->t = i->u.apply(i->t, s); i->u = U();
 	}
 	T query(ll l, ll r) { return query(l, r, root); }
 	T query(ll l, ll r, Node *&i) { // [l, r), r <= l -> T()
