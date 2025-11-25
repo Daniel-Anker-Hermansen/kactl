@@ -9,16 +9,17 @@
  */
 #pragma once
 
+// To make it not lazy exclude U from all templates
 template<class T, class U>
 struct Node {
 	Node *l = 0, *r = 0;
-	T val, aug;
-	U upd;
+	T val, aug; // exclude aug for non-lazy
+	U upd; // exclude for non-lazy
 	int y, c = 1;
-	Node(int val) : val(val), aug(val), upd(), y(rand()) {}
+	Node(int val) : val(val), aug(val), upd(), y(rand()) {} // exclude aug and upd for non-lazy
 	void recalc();
 
-	void push() {
+	void push() { // exclude for non-lazy
 		val = upd.apply(val, 1);
 		if (l) l->upd = upd * l->upd, l->aug = upd.apply(l->aug, l->c);
 		if (r) r->upd = upd * r->upd, r->aug = upd.apply(r->aug, r->c);
@@ -29,19 +30,19 @@ struct Node {
 template<class T, class U> int cnt(Node<T, U>* n) { return n ? n->c : 0; }
 template<class T, class U> void Node<T, U>::recalc() { 
 	c = cnt(l) + cnt(r) + 1; 
-	aug = val;
-	if (l) aug = l->aug + aug;
-	if (r) aug = aug + r->aug;
+	aug = val; // exclude for non-lazy
+	if (l) aug = l->aug + aug; // exclude for non-lazy
+	if (r) aug = aug + r->aug; // exclude for non-lazy
 }
 
 template<class T, class U, class F> void each(Node<T, U>* n, F f) {
-	if (n) { n->push(); each(n->l, f); f(n->val); each(n->r, f); }
+	if (n) { n->push(); each(n->l, f); f(n->val); each(n->r, f); } // exclude push for non-lazy
 }
 
 template<class T, class U>
 pair<Node<T, U>*, Node<T, U>*> split(Node<T, U>* n, int k) {
 	if (!n) return {};
-	n->push();
+	n->push(); // exclude for non-lazy;
 	if (cnt(n->l) >= k) { // "n->val >= k" for lower_bound(k)
 		auto [L,R] = split(n->l, k);
 		n->l = R;
@@ -60,11 +61,11 @@ Node<T, U>* merge(Node<T, U>* l, Node<T, U>* r) {
 	if (!l) return r;
 	if (!r) return l;
 	if (l->y > r->y) {
-		l->push();
+		l->push(); // exclude for non-lazy;
 		l->r = merge(l->r, r);
 		return l->recalc(), l;
 	} else {
-		r->push();
+		r->push(); // exclude for non-lazy;
 		r->l = merge(l, r->l);
 		return r->recalc(), r;
 	}
