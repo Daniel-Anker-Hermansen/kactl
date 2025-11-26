@@ -14,35 +14,35 @@ int matInv(vector<vector<double>>& A) {
 	int n = sz(A); vi col(n);
 	vector<vector<double>> tmp(n, vector<double>(n));
 	rep(i,0,n) tmp[i][i] = 1, col[i] = i;
-
+	
 	rep(i,0,n) {
 		int r = i, c = i;
 		rep(j,i,n) rep(k,i,n)
-			if (fabs(A[j][k]) > fabs(A[r][c]))
-				r = j, c = k;
-		if (fabs(A[r][c]) < 1e-12) return i;
+			if (fabs(A[j][k]) > fabs(A[r][c])) // if (A[j][k])
+				r = j, c = k; // { r = j; c = k; goto found; }
+		if (fabs(A[r][c]) < 1e-12) return i; // return i; found:
 		A[i].swap(A[r]); tmp[i].swap(tmp[r]);
 		rep(j,0,n)
 			swap(A[j][i], A[j][c]), swap(tmp[j][i], tmp[j][c]);
 		swap(col[i], col[c]);
-		double v = A[i][i];
+		double v = A[i][i]; // inverse
 		rep(j,i+1,n) {
-			double f = A[j][i] / v;
+			double f = A[j][i] / v; // mul, mod
 			A[j][i] = 0;
-			rep(k,i+1,n) A[j][k] -= f*A[i][k];
-			rep(k,0,n) tmp[j][k] -= f*tmp[i][k];
+			rep(k,i+1,n) A[j][k] -= f*A[i][k]; // mod
+			rep(k,0,n) tmp[j][k] -= f*tmp[i][k]; // mod
 		}
-		rep(j,i+1,n) A[i][j] /= v;
-		rep(j,0,n) tmp[i][j] /= v;
+		rep(j,i+1,n) A[i][j] /= v; // mul, mod
+		rep(j,0,n) tmp[i][j] /= v; // mul, mod
 		A[i][i] = 1;
 	}
-
+	
 	/// forget A at this point, just eliminate tmp backward
 	for (int i = n-1; i > 0; --i) rep(j,0,i) {
 		double v = A[j][i];
-		rep(k,0,n) tmp[j][k] -= v*tmp[i][k];
+		rep(k,0,n) tmp[j][k] -= v*tmp[i][k]; // mod
 	}
-
+	// A[col[i]][col[j]] = tmp[i][j] % mod + (tmp[i][j] < 0)*mod;
 	rep(i,0,n) rep(j,0,n) A[col[i]][col[j]] = tmp[i][j];
 	return n;
 }
