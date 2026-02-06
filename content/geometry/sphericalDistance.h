@@ -3,12 +3,8 @@
  * Date: 2009-04-07
  * License: CC0
  * Source: My geometric reasoning
- * Description: Returns the shortest distance on the sphere with radius radius between the points
- * with azimuthal angles (longitude) f1 ($\phi_1$) and f2 ($\phi_2$) from x axis and zenith angles
- * (latitude) t1 ($\theta_1$) and t2 ($\theta_2$) from z axis (0 = north pole). All angles measured
- * in radians. The algorithm starts by converting the spherical coordinates to cartesian coordinates
- * so if that is what you have you can use only the two last rows. dx*radius is then the difference
- * between the two points in the x direction and d*radius is the total distance between the points.
+ * Description: Shortest distance along surface of shpere points 1 and 2.
+ * f = longtitude [-pi, pi], t = latitude [0, pi] (0 is north pole).
  * Status: tested on kattis:airlinehub
  */
 #pragma once
