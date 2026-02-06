@@ -18,7 +18,6 @@ struct SuffixTree {
 	int toi(char c) { return c - 'a'; }
 	string a; // v = cur node, q = cur position
 	int t[N][ALPHA],l[N],r[N],p[N],s[N],v=0,q=0,m=2;
-
 	void ukkadd(int i, int c) { suff:
 		if (r[v]<=q) {
 			if (t[v][c]==-1) { t[v][c]=m;  l[m]=i;
@@ -35,7 +34,6 @@ struct SuffixTree {
 			q=r[v]-(q-r[m]);  m+=2;  goto suff;
 		}
 	}
-
 	SuffixTree(string a) : a(a) {
 		fill(r,r+N,sz(a));
 		memset(s, 0, sizeof s);
@@ -44,7 +42,6 @@ struct SuffixTree {
 		s[0] = 1; l[0] = l[1] = -1; r[0] = r[1] = p[0] = p[1] = 0;
 		rep(i,0,sz(a)) ukkadd(i, toi(a[i]));
 	}
-
 	// example: find longest common substring (uses ALPHA = 28)
 	pii best;
 	int lcs(int node, int i1, int i2, int olen) {

@@ -8,6 +8,8 @@
 \contest{\ }{\today}
 \enablecolors
 
+\usepackage{setspace}
+
 \fancypagestyle{plain}{}
 
 \begin{document}
@@ -18,8 +20,8 @@
 	% \thispagestyle{fancy}
 	% Table of contents, without subsections:
 	\setcounter{tocdepth}{0}
-	\renewcommand*\contentsname{\>}
-	\tableofcontents
+	\renewcommand*\contentsname{\> \newline \>}
+	{\tiny\tableofcontents}
 
 	\kactlchapter{contest}
 	\kactlchapter{math}

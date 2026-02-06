@@ -19,13 +19,11 @@ vector<vi> treeJump(vi& P){
 		jmp[i][j] = jmp[i-1][jmp[i-1][j]];
 	return jmp;
 }
-
 int jmp(vector<vi>& tbl, int nod, int steps){
 	rep(i,0,sz(tbl))
 		if(steps&(1<<i)) nod = tbl[i][nod];
 	return nod;
 }
-
 int lca(vector<vi>& tbl, vi& depth, int a, int b) {
 	if (depth[a] < depth[b]) swap(a, b);
 	a = jmp(tbl, a, depth[a] - depth[b]);

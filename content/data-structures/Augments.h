@@ -8,25 +8,20 @@
 #pragma once
 
 // Data
-
 struct Max {
 	ll x = LONG_LONG_MIN; // identity
 	Max() {} Max(ll x) : x(x) {}
 	Max operator+(Max t) const { return Max(max(x, t.x)); }
 };
-
 // Updates
-
 struct Add {
 	ll a = 0;
 	Add() {} Add(ll a) : a(a) {}
 	Add operator*(Add u) const { return Add(a + u.a); } // 2. * 1.
 	Max apply(Max t, ll s) const { return Max(t.x + a); }
 };
-
 struct SetAdd {
 	ll set, add;
- 
 	SetAdd() : set(-1), add(0) {}
 	SetAdd(ll set, ll add) : set(set), add(add) {}
 	SetAdd operator*(SetAdd t) const { // 2. * 1.
