@@ -10,5 +10,5 @@
 #pragma GCC target("bmi2")
 #include <immintrin.h> /** keep-include */
 
-_pdep_u32(a, b); // deposits bits from a to 1-bits of b (starting from lsb)
-_pext_u32(a, b); // compacts bits from a chosen by 1-bits of b (starting from lsb)
+_pdep_u32(a, b); // deposits bits from a to 1-bits of b
+_pext_u32(a, b); // compacts bits from a chosen by 1-bits of b
