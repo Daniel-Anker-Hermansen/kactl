@@ -1,9 +1,12 @@
 \documentclass[9pt, a4paper, notitlepage]{extreport}
 \usepackage{kactlpkg}
+\usepackage{textcomp}  % Required for encoding \textbigcircle
+\usepackage{scalerel}  % Required for emoji \scalerel
+\def\🦀{\scalerel*{\includegraphics{content/tex/1f980.eps}}{\textrm{\textbigcircle}}}
 \kactlcontentdir{content}
 
-\university{AU}{[\&](auto\& self, i64 i) -\texttt{>} void \{ vis[i] = 1; f(i); for (i64 n : adj[i]) if (!vis[n]) self(self, n); \}; \newline Aarhus University}{au}
-\team{\texttt{[\&](auto \&self, i64 i) -> void \{ vis[i] = 1; f(i); for (i64 n : adj[i]) if (!vis[n]) self(self, n); \};}}{Daniel Anker Hermansen, Frederik Vase Haraldsson, Sebastian Meineche Falk}
+\university{AU}{\🦀 Rustne Krabber \🦀 Aarhus University}{au}
+\team{\🦀 Rustne Krabber \🦀}{Daniel Anker Hermansen, Kostiantyn Milkevych, Simon Yde Rasmussen}
 % \contest{ACM-ICPC World Finals 2017}{May 24, 2017}
 \contest{\ }{\today}
 \enablecolors
@@ -13,7 +16,7 @@
 \fancypagestyle{plain}{}
 
 \begin{document}
-	% \maketeampage
+	\maketeampage
 	% Small KACTL header on the first page:
 	% \maketitle{``One Last Time'' Edition}{\today}
 	\begin{multicols*}{3}
